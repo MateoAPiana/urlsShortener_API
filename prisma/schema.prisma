@@ -10,5 +10,5 @@ datasource db {
 model URLRegister {
   id           Int    @id @default(autoincrement())
   url_original String
-  url_shorted  String
+  url_shorted  String @unique
 }
