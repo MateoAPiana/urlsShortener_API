@@ -1,7 +1,7 @@
 import express from "express"
 import morgan from "morgan"
 import cors from "cors"
-import { createNewURLShorted, deleteURL } from "./models/urls"
+import { createNewURLShorted, deleteURL, getAllURLs } from "./models/urls"
 import router from "./routes/redirect.routes"
 
 const app = express()
@@ -15,6 +15,12 @@ app.use(morgan("dev"))
 app.use(cors())
 
 app.use("/redirect", router)
+
+app.get("/", async (req, res) => {
+  const dbRes = await getAllURLs()
+  if (dbRes.error) res.status(400).json({ error: dbRes.error })
+  res.status(200).json({ urls: dbRes.urls })
+})
 
 app.post("/", async (req, res) => {
   const { url } = req.body

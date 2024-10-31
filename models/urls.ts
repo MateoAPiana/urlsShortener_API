@@ -2,6 +2,15 @@ import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
+export async function getAllURLs() {
+  try {
+    const dbRes = await prisma.uRLRegister.findMany({ select: { url_original: true, url_shorted: true } })
+    return dbRes ? { urls: dbRes } : { error: "not found urls" }
+  } catch (error) {
+    return { error }
+  }
+}
+
 export async function createNewURLShorted({ url }) {
   try {
     const id = crypto.randomUUID()
