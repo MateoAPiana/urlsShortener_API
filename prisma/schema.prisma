@@ -1,0 +1,14 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model URLRegister {
+  id           Int    @id @default(autoincrement())
+  url_original String
+  url_shorted  String
+}
