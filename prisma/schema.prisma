@@ -7,8 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id          Int           @id @default(autoincrement())
+  userName    String        @unique
+  password    String
+  urlsCreates URLRegister[]
+}
+
 model URLRegister {
   id           Int    @id @default(autoincrement())
   url_original String
   url_shorted  String @unique
+  user         User   @relation(fields: [userID], references: [id])
+  userID       Int
+  countVisited Int    @default(0)
 }

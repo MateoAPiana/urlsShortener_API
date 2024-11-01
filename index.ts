@@ -3,18 +3,34 @@ import morgan from "morgan"
 import cors from "cors"
 import { createNewURLShorted, deleteURL, getAllURLs } from "./models/urls"
 import router from "./routes/redirect.routes"
+import cookieParser from "cookie-parser"
+import jwt from "jsonwebtoken"
+import "./types.d"
 
 const app = express()
 
 const PORT = process.env.PORT || 3000
 
 app.use(express.json())
-
+app.use(cookieParser())
 app.use(morgan("dev"))
 
 app.use(cors())
 
 app.use("/redirect", router)
+
+app.use((req, res, next) => {
+  const token = req.cookies.access_token
+  req.session = { user: null }
+
+  try {
+    const data = jwt.verify(token, process.env.SECRET_JWT_KEY || "MyBigSecretPassword")
+    req.session.user = data
+  } catch { }
+
+  next()
+})
+
 
 app.get("/", async (req, res) => {
   const dbRes = await getAllURLs()
