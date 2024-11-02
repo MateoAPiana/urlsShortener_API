@@ -1,9 +1,9 @@
 import { Router } from "express"
 import { getURL } from "../models/urls"
 
-const router = Router()
+const URLrouter = Router()
 
-router.get("/:url", async (req, res) => {
+URLrouter.get("/:url", async (req, res) => {
   const { url } = req.params
   console.log(url)
   const dbRes = await getURL({ urlShorted: url })
@@ -11,4 +11,4 @@ router.get("/:url", async (req, res) => {
   else res.status(200).redirect(dbRes.url?.url_original)
 })
 
-export default router
+export default URLrouter

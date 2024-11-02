@@ -2,10 +2,11 @@ import express from "express"
 import morgan from "morgan"
 import cors from "cors"
 import { createNewURLShorted, deleteURL, getAllURLs } from "./models/urls"
-import router from "./routes/redirect.routes"
+import URLrouter from "./routes/redirect.routes"
 import cookieParser from "cookie-parser"
 import jwt from "jsonwebtoken"
 import "./types.d"
+import userRouter from "./routes/user.routes"
 
 const app = express()
 
@@ -17,7 +18,7 @@ app.use(morgan("dev"))
 
 app.use(cors())
 
-app.use("/redirect", router)
+app.use("/redirect", URLrouter)
 
 app.use((req, res, next) => {
   const token = req.cookies.access_token
@@ -31,6 +32,7 @@ app.use((req, res, next) => {
   next()
 })
 
+app.use("/user", userRouter)
 
 app.get("/", async (req, res) => {
   const dbRes = await getAllURLs()
