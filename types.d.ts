@@ -3,7 +3,7 @@ declare global {
   namespace Express {
     interface Request {
       session?: {
-        user: JwtPayload | null | string;
+        user: JwtPayload | null | { id: number };
       };
     }
   }

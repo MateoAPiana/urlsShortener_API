@@ -1,36 +1,24 @@
 import express from "express"
 import morgan from "morgan"
-import cors from "cors"
 import { createNewURLShorted, deleteURL, getAllURLs } from "./models/urls"
 import URLrouter from "./routes/redirect.routes"
 import cookieParser from "cookie-parser"
 import jwt from "jsonwebtoken"
-import "./types.d"
 import userRouter from "./routes/user.routes"
+import { corsMiddleware } from "./middleware/cors"
+import "./types.d"
 
 const app = express()
 
 const PORT = process.env.PORT || 3000
 
+app.use(corsMiddleware())
+
 app.use(express.json())
 app.use(cookieParser())
 app.use(morgan("dev"))
 
-app.use(cors())
-
 app.use("/redirect", URLrouter)
-
-app.use((req, res, next) => {
-  const token = req.cookies.access_token
-  req.session = { user: null }
-
-  try {
-    const data = jwt.verify(token, process.env.SECRET_JWT_KEY || "MyBigSecretPassword")
-    req.session.user = data
-  } catch { }
-
-  next()
-})
 
 app.use("/user", userRouter)
 
@@ -41,10 +29,23 @@ app.get("/", async (req, res) => {
 })
 
 app.post("/", async (req, res) => {
-  const { url } = req.body
-  const dbRes = await createNewURLShorted({ url })
-  if (dbRes.error) res.status(400).json({ error: dbRes.error })
-  else res.status(201).json({ url, newURL: dbRes.newURL })
+  const { url, token } = req.body
+  req.session = { user: null }
+
+  try {
+    const data = jwt.verify(token as string, process.env.SECRET_JWT_KEY || "MyBigSecretPassword")
+    if (typeof data !== "string") req.session.user = data
+  } catch (error) {
+    console.error("Error al verificar el token:", error.message);
+  }
+  if (req.session?.user === null) res.status(400).json({ error: "Not found user" })
+  else {
+    const userID = req.session?.user.id
+    console.log(userID)
+    const dbRes = await createNewURLShorted({ url, userID })
+    if (dbRes.error) res.status(400).json({ error: dbRes.error })
+    else res.status(201).json({ url, newURL: dbRes.newURL })
+  }
 })
 
 app.delete("/:url", async (req, res) => {

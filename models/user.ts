@@ -17,3 +17,12 @@ export async function createUser(
     return { error }
   }
 }
+
+export async function loginUser({ userName, password }) {
+  try {
+    const user = await prisma.user.findUniqueOrThrow({ where: { userName, password } })
+    return user
+  } catch (error) {
+    console.log(error)
+  }
+}

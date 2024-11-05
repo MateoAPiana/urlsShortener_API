@@ -11,18 +11,20 @@ export async function getAllURLs() {
   }
 }
 
-export async function createNewURLShorted({ url }) {
+export async function createNewURLShorted({ url, userID }) {
   try {
     const id = crypto.randomUUID()
     const newURL = `${process.env.PAGE_URL || "http://localhost:3000"}/redirect/${id}`
     await prisma.uRLRegister.create({
       data: {
         url_original: url,
-        url_shorted: id
+        url_shorted: id,
+        userID: userID
       }
     })
     return { newURL }
   } catch (error) {
+    console.log({ error })
     return { error }
   }
 }
