@@ -6,7 +6,6 @@ export async function createUser(
   { userName, password }:
     { userName: string, password: string }) {
   try {
-    console.log({ userName, password })
     await prisma.user.create({
       data: {
         userName,

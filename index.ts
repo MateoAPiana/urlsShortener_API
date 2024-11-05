@@ -36,7 +36,6 @@ app.post("/url/read", async (req, res) => {
   if (req.session?.user === null) res.status(400).json({ error: "Not found user" })
   else {
     const userID = req.session?.user.id
-    console.log(userID)
     const dbRes = await getURLByUser({ userID })
     if (typeof dbRes !== "object") res.status(400).json({ error: dbRes })
     else res.status(200).json({ urls: dbRes })
@@ -56,7 +55,6 @@ app.post("/url/create", async (req, res) => {
   if (req.session?.user === null) res.status(400).json({ error: "Not found user" })
   else {
     const userID = req.session?.user.id
-    console.log(userID)
     const dbRes = await createNewURLShorted({ url, userID })
     if (dbRes.error) res.status(400).json({ error: dbRes.error })
     else res.status(201).json({ url, newURL: dbRes.newURL })

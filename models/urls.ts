@@ -42,7 +42,6 @@ export async function createNewURLShorted({ url, userID }) {
 export async function getURL({ urlShorted }) {
   try {
     const url = await prisma.uRLRegister.findFirst({ where: { url_shorted: urlShorted } })
-    console.log({ url })
     return { url }
   } catch (error) {
     return { error }
