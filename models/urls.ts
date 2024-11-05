@@ -11,6 +11,16 @@ export async function getAllURLs() {
   }
 }
 
+export async function getURLByUser({ userID }) {
+  try {
+    const urls = await prisma.uRLRegister.findMany({ where: { userID } })
+    return urls
+  } catch (error) {
+    console.log({ error })
+    return { error }
+  }
+}
+
 export async function createNewURLShorted({ url, userID }) {
   try {
     const id = crypto.randomUUID()

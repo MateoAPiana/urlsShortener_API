@@ -1,6 +1,6 @@
 import express from "express"
 import morgan from "morgan"
-import { createNewURLShorted, deleteURL, getAllURLs } from "./models/urls"
+import { createNewURLShorted, deleteURL, getAllURLs, getURLByUser } from "./models/urls"
 import URLrouter from "./routes/redirect.routes"
 import cookieParser from "cookie-parser"
 import jwt from "jsonwebtoken"
@@ -22,13 +22,28 @@ app.use("/redirect", URLrouter)
 
 app.use("/user", userRouter)
 
-app.get("/", async (req, res) => {
-  const dbRes = await getAllURLs()
-  if (dbRes.error) res.status(400).json({ error: dbRes.error })
-  res.status(200).json({ urls: dbRes.urls })
+app.post("/url/read", async (req, res) => {
+  const { token } = req.body
+  req.session = { user: null }
+
+  try {
+    const data = jwt.verify(token as string, process.env.SECRET_JWT_KEY || "MyBigSecretPassword")
+    if (typeof data !== "string") req.session.user = data
+  } catch (error) {
+    console.error("Error al verificar el token:", error.message);
+  }
+
+  if (req.session?.user === null) res.status(400).json({ error: "Not found user" })
+  else {
+    const userID = req.session?.user.id
+    console.log(userID)
+    const dbRes = await getURLByUser({ userID })
+    if (typeof dbRes !== "object") res.status(400).json({ error: dbRes })
+    else res.status(200).json({ urls: dbRes })
+  }
 })
 
-app.post("/", async (req, res) => {
+app.post("/url/create", async (req, res) => {
   const { url, token } = req.body
   req.session = { user: null }
 
