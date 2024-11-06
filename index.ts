@@ -12,18 +12,16 @@ const app = express()
 
 const PORT = process.env.PORT || 3000
 
+app.disable('x-powered-by')
 app.use(corsMiddleware())
 
 app.use(express.json())
 app.use(cookieParser())
 app.use(morgan("dev"))
 
-app.use("/redirect", URLrouter)
+app.use((req, res, next) => {
+  const token = req.cookies.access_token
 
-app.use("/user", userRouter)
-
-app.post("/url/read", async (req, res) => {
-  const { token } = req.body
   req.session = { user: null }
 
   try {
@@ -33,6 +31,14 @@ app.post("/url/read", async (req, res) => {
     console.error("Error al verificar el token:", error.message);
   }
 
+  next()
+})
+
+app.use("/redirect", URLrouter)
+
+app.use("/user", userRouter)
+
+app.get("/url/read", async (req, res) => {
   if (req.session?.user === null) res.status(400).json({ error: "Not found user" })
   else {
     const userID = req.session?.user.id
@@ -43,15 +49,7 @@ app.post("/url/read", async (req, res) => {
 })
 
 app.post("/url/create", async (req, res) => {
-  const { url, token } = req.body
-  req.session = { user: null }
-
-  try {
-    const data = jwt.verify(token as string, process.env.SECRET_JWT_KEY || "MyBigSecretPassword")
-    if (typeof data !== "string") req.session.user = data
-  } catch (error) {
-    console.error("Error al verificar el token:", error.message);
-  }
+  const { url } = req.body
   if (req.session?.user === null) res.status(400).json({ error: "Not found user" })
   else {
     const userID = req.session?.user.id
