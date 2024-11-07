@@ -1,6 +1,6 @@
 import express from "express"
 import morgan from "morgan"
-import { createNewURLShorted, deleteURL, getAllURLs, getURLByUser } from "./models/urls"
+import { createNewURLShorted, deleteURL, getURLByUser } from "./models/urls"
 import URLrouter from "./routes/redirect.routes"
 import cookieParser from "cookie-parser"
 import jwt from "jsonwebtoken"
@@ -60,6 +60,7 @@ app.post("/url/create", async (req, res) => {
 })
 
 app.delete("/:url", async (req, res) => {
+  if (req.session?.user === null) res.status(400).json({ error: "Not found user" })
   const { url } = req.params
   const dbRes = await deleteURL({ url_shorted: url })
   if (dbRes.error) res.status(400).json({ error: dbRes.error })

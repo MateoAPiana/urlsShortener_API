@@ -24,7 +24,7 @@ userRouter.post("/login", async (req, res) => {
       const token = jwt.sign({ id: user.id, username: user.userName },
         process.env.SECRET_JWT_KEY || "MyBigSecretPassword",
         {
-          expiresIn: '1h'
+          expiresIn: '10h'
         })
       res
         .cookie('access_token', token, {
