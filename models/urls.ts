@@ -58,3 +58,13 @@ export async function deleteURL({ url_shorted }) {
     return { error }
   }
 }
+
+export const incrementCounterVisited = async (url: string) => {
+  try {
+    const counted = await prisma.uRLRegister.findFirst({ where: { url_shorted: url }, select: { countVisited: true } })
+    if (!counted) return
+    return await prisma.uRLRegister.update({ data: { countVisited: counted.countVisited + 1 }, where: { url_shorted: url } })
+  } catch (error) {
+    console.log(error)
+  }
+}
