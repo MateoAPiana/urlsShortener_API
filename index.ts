@@ -1,7 +1,6 @@
 import express from "express"
 import morgan from "morgan"
-import { createNewURLShorted, deleteURL, getURLByUser } from "./models/urls"
-import URLrouter from "./routes/redirect.routes"
+import URLrouter from "./routes/url.routes"
 import cookieParser from "cookie-parser"
 import jwt from "jsonwebtoken"
 import userRouter from "./routes/user.routes"
@@ -37,35 +36,6 @@ app.use((req, res, next) => {
 app.use("/", URLrouter)
 
 app.use("/user", userRouter)
-
-app.get("/url/read", async (req, res) => {
-  if (req.session?.user === null) res.status(400).json({ error: "Not found user" })
-  else {
-    const userID = req.session?.user.id
-    const dbRes = await getURLByUser({ userID })
-    if (typeof dbRes !== "object") res.status(400).json({ error: dbRes })
-    else res.status(200).json({ urls: dbRes })
-  }
-})
-
-app.post("/url/create", async (req, res) => {
-  const { url } = req.body
-  if (req.session?.user === null) res.status(400).json({ error: "Not found user" })
-  else {
-    const userID = req.session?.user.id
-    const dbRes = await createNewURLShorted({ url, userID })
-    if (dbRes.error) res.status(400).json({ error: dbRes.error })
-    else res.status(201).json({ url, newURL: dbRes.newURL })
-  }
-})
-
-app.delete("/:url", async (req, res) => {
-  if (req.session?.user === null) res.status(400).json({ error: "Not found user" })
-  const { url } = req.params
-  const dbRes = await deleteURL({ url_shorted: url })
-  if (dbRes.error) res.status(400).json({ error: dbRes.error })
-  else res.status(200).json({ url, newURL: dbRes.dbRes })
-})
 
 app.listen(PORT, () => {
   console.log(`Port listening in http://localhost:${PORT}`)
