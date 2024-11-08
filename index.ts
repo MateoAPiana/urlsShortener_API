@@ -34,7 +34,7 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use("/redirect", URLrouter)
+app.use("/", URLrouter)
 
 app.use("/user", userRouter)
 

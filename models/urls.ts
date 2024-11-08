@@ -25,7 +25,7 @@ export async function getURLByUser({ userID }) {
 export async function createNewURLShorted({ url, userID }) {
   try {
     const id = randomBytes(5).toString('hex')
-    const newURL = `${process.env.PAGE_URL || "http://localhost:3000"}/redirect/${id}`
+    const newURL = `${process.env.PAGE_URL || "http://localhost:3000"}/${id}`
     await prisma.uRLRegister.create({
       data: {
         url_original: url,
