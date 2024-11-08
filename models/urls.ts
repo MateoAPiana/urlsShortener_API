@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client"
+import { randomBytes } from 'node:crypto'
 
 const prisma = new PrismaClient()
 
@@ -23,7 +24,7 @@ export async function getURLByUser({ userID }) {
 
 export async function createNewURLShorted({ url, userID }) {
   try {
-    const id = crypto.randomUUID()
+    const id = randomBytes(5).toString('hex')
     const newURL = `${process.env.PAGE_URL || "http://localhost:3000"}/redirect/${id}`
     await prisma.uRLRegister.create({
       data: {
