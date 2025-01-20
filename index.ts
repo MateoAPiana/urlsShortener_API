@@ -18,6 +18,10 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(morgan("dev"))
 
+app.get('/healthz', (req, res) => {
+  res.status(200).send('OK');
+});
+
 app.use((req, res, next) => {
   const token = req.cookies.access_token
 
