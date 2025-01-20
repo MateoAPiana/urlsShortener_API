@@ -38,7 +38,5 @@ app.use("/", URLrouter)
 app.use("/user", userRouter)
 
 app.listen(PORT, () => {
-  console.log(`Port running in http:localhost:${PORT}`)
+  console.log(`Port running in http://localhost:${PORT}`)
 })
-
-console.log("Hello")
