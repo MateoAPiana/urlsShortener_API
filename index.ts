@@ -37,6 +37,4 @@ app.use("/", URLrouter)
 
 app.use("/user", userRouter)
 
-app.listen(PORT, () => {
-  console.log(`Port listening in http://localhost:${PORT}`)
-})
+app.listen(PORT)
