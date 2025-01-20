@@ -1,5 +1,5 @@
 import cors from 'cors'
-import { ACCEPTED_ORIGINS } from '../constants'
+import { ACCEPTED_ORIGINS } from '../constants.js'
 
 export const corsMiddleware = ({
   acceptedOrigins = process.env.UI_URL ? process.env.UI_URL : ACCEPTED_ORIGINS,

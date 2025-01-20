@@ -5,10 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "pnpm tsx index.ts",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate": "prisma generate && prisma migrate deploy && pnpm run start",
-    "dev": "pnpm tsx --watch index.ts"
+    "dev": "node --watch index.js"
   },
   "keywords": [],
   "author": "",

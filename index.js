@@ -1,11 +1,10 @@
 import express from "express"
 import morgan from "morgan"
-import URLrouter from "./routes/url.routes"
+import URLrouter from "./routes/url.routes.js"
 import cookieParser from "cookie-parser"
 import jwt from "jsonwebtoken"
-import userRouter from "./routes/user.routes"
-import { corsMiddleware } from "./middleware/cors"
-import "./types.d"
+import userRouter from "./routes/user.routes.js"
+import { corsMiddleware } from "./middleware/cors.js"
 
 const app = express()
 
@@ -24,7 +23,7 @@ app.use((req, res, next) => {
   req.session = { user: null }
 
   try {
-    const data = jwt.verify(token as string, process.env.SECRET_JWT_KEY || "MyBigSecretPassword")
+    const data = jwt.verify(token, process.env.SECRET_JWT_KEY || "MyBigSecretPassword")
     if (typeof data !== "string") req.session.user = data
   } catch (error) {
     console.error("Error al verificar el token:", error.message);
@@ -38,7 +37,7 @@ app.use("/", URLrouter)
 app.use("/user", userRouter)
 
 app.listen(PORT, () => {
-  console.log(`Port running in http:localhost:${PORT}`)
+  console.log(`Port running in http://localhost:${PORT}`)
 })
 
 console.log("Hello")
