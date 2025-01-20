@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { createNewURLShorted, deleteURL, getURL, getURLByUser, incrementCounterVisited } from "../models/urls"
-import "./types.d"
+import "../types.d"
 
 const URLrouter = Router()
 
