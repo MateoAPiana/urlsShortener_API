@@ -28,6 +28,16 @@ URLrouter.get("/url/read", async (req, res) => {
   }
 })
 
+URLrouter.post("/url/read", async (req, res) => {
+  if (req.session?.user === null) res.status(400).json({ error: "Not found user" })
+  else {
+    const userID = req.session?.user.id
+    const dbRes = await getURLByUser({ userID })
+    if (typeof dbRes !== "object") res.status(400).json({ error: dbRes })
+    else res.status(200).json({ urls: dbRes })
+  }
+})
+
 URLrouter.post("/url/create", async (req, res) => {
   const { url } = req.body
   if (req.session?.user === null) res.status(400).json({ error: "Not found user" })
