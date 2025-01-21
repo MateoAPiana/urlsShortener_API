@@ -19,6 +19,7 @@ app.use(cookieParser())
 app.use(morgan("dev"))
 
 app.use((req, res, next) => {
+  console.log(Object.entries(req.cookies))
   const token = req.cookies.access_token
 
   req.session = { user: null }
