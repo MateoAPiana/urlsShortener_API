@@ -9,7 +9,22 @@ userRouter.post("/", async (req, res) => {
     const { userName, password } = req.body
     const dbRes = await createUser({ userName, password })
     if (dbRes?.error) res.status(400).json({ error: dbRes.error })
-    else res.status(201).json({ msg: "create" })
+    else {
+      const token = jwt.sign({ username: userName },
+        process.env.SECRET_JWT_KEY || "MyBigSecretPassword",
+        {
+          expiresIn: '10h'
+        })
+      res
+        .cookie('access_token', token, {
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: 1000 * 60 * 60,
+          httpOnly: true
+        })
+        .send({ user: { userName, password } })
+      res.status(201).json({ msg: "create" })
+    }
   } catch (error) {
     res.status(400).json({ error })
   }
@@ -31,6 +46,7 @@ userRouter.post("/login", async (req, res) => {
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax',
           maxAge: 1000 * 60 * 60,
+          httpOnly: true
         })
         .send({ user })
     }

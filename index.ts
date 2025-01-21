@@ -18,18 +18,6 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(morgan("dev"))
 
-process.on('SIGTERM', () => {
-  console.log('SIGTERM signal received. Closing server.');
-  server.close(() => {
-    console.log('Server closed.');
-  });
-});
-
-
-app.get('/healthz', (req, res) => {
-  res.status(200).send('OK');
-});
-
 app.use((req, res, next) => {
   const token = req.cookies.access_token
 
