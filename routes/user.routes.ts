@@ -17,7 +17,6 @@ userRouter.post("/", async (req, res) => {
         })
       res
         .cookie('access_token', token, {
-          secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax',
           maxAge: 1000 * 60 * 60,
           httpOnly: true
@@ -43,7 +42,6 @@ userRouter.post("/login", async (req, res) => {
         })
       res
         .cookie('access_token', token, {
-          secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax',
           maxAge: 1000 * 60 * 60,
           httpOnly: true
