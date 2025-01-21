@@ -18,8 +18,7 @@ userRouter.post("/", async (req, res) => {
       res
         .cookie('access_token', token, {
           sameSite: 'lax',
-          maxAge: 1000 * 60 * 60,
-          httpOnly: true
+          maxAge: 1000 * 60 * 60
         })
         .send({ user: { userName, password } })
       res.status(201).json({ msg: "create" })
@@ -43,8 +42,7 @@ userRouter.post("/login", async (req, res) => {
       res
         .cookie('access_token', token, {
           sameSite: 'lax',
-          maxAge: 1000 * 60 * 60,
-          httpOnly: true
+          maxAge: 1000 * 60 * 60
         })
         .send({ user })
     }
