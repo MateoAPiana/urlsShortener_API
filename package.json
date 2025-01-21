@@ -7,7 +7,7 @@
   "scripts": {
     "start": "pnpm tsx index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrate": "prisma generate && prisma migrate deploy && pnpm run start",
+    "migrate": "prisma generate && prisma migrate deploy",
     "dev": "pnpm tsx --watch index.ts"
   },
   "keywords": [],
